@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interview Practice App</title>
+ 
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+ 
+<div class="container">
+<div class="blog-buttons">
+<button onclick="location.href='fi-blog.html'">
+📘 FI Blog
+</button>
+ 
+<button onclick="location.href='co-blog.html'">
+📗 CO Blog
+</button>
+</div>
+<div id="blogEditor" style="display:none;">
+ 
+<h2 id="blogHeading"></h2>
+ 
+<textarea id="blogText"
+placeholder="Write your notes here...">
+</textarea>
+ 
+<br><br>
+ 
+<button onclick="saveBlog()">
+💾 Save Notes
+</button>
+ 
+</div>    
+<h1>KRUSHNA CHANDRA SWAIN </h1>
+<h1>Interview Practice </h1>
+<input
+type="text"
+id="searchInput"
+placeholder="Search Question..."
+><div class="upload-section">
+<input type="file" id="excelFile" accept=".xlsx,.xls">
+<button id="uploadBtn">📁 Upload Excel</button>
+</div>
+ 
+<p id="counter"></p>
+ <p id="counter"></p>
+
+  
+<div class="question-box">
+<div class="question-box">
+<h2 id="question"></h2>
+</div>
+
+ <div class="answer-box">
+<p id="answer" style="display:none;"></p>
+</div>
+ 
+<button onclick="toggleAnswer()">Show Answer</button>
+<button onclick="previousQuestion()">Previous</button>
+<button onclick="randomQuestion()">Random</button>
+<button onclick="nextQuestion()">Next</button>
+</div>
+ 
+<button onclick="copyQuestion()">Copy</button>
+<button onclick="markFavorite()">⭐ 
+Favorite</button>
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<script src="questions.js"></script>
+<script src="script.js"></script>
+ 
+</body>
+</html>
