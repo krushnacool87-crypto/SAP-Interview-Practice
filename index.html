@@ -1,75 +1,1717 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Interview Practice App</title>
- 
-<link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interview Practice App</title>
+  <meta name="theme-color" content="#1976d2">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/app-icon.svg" type="image/svg+xml">
+  <style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    text-align: center;
+    margin: 0;
+    padding: 50px 20px 40px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode {
+    background: linear-gradient(135deg, #0f172a, #1e293b);
+    color: #e2e8f0;
+}
+
+.container {
+    width: 95%;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+h1 {
+    color: #ffffff;
+    margin-bottom: 15px;
+}
+
+.community-sidebar {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    width: 280px;
+    background: rgba(255, 255, 255, 0.96);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+    padding: 14px;
+    z-index: 1000;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.community-sidebar[hidden] {
+    display: none;
+}
+
+.community-toggle {
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1001;
+    padding: 11px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    border-radius: 12px;
+    background: #1976d2;
+    color: #fff;
+    font-weight: bold;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.community-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.community-header h3 {
+    margin: 0 0 8px;
+    color: #0d3b66;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.community-close {
+    flex: 0 0 auto;
+    padding: 5px 9px;
+    margin: 0;
+    background: transparent;
+    color: #475569;
+    font-size: 1rem;
+}
+
+.community-close:hover {
+    background: #e2e8f0;
+}
+
+.community-status {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #1f7a1f;
+    margin-bottom: 12px;
+    font-weight: bold;
+}
+
+.community-status.connected {
+    color: #1f7a1f;
+}
+
+.community-status.disconnected {
+    color: #b42318;
+}
+
+.online-dot {
+    width: 10px;
+    height: 10px;
+    background: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+}
+
+.community-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.community-module-btn {
+    padding: 8px 10px;
+    border: none;
+    border-radius: 8px;
+    background: #e6f0ff;
+    color: #0d3b66;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.community-module-btn.active {
+    background: #1976d2;
+    color: white;
+}
+
+.community-members {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.community-member {
+    background: #edf3ff;
+    color: #1d4ed8;
+    border: 1px solid #cfe0ff;
+    font-size: 0.72rem;
+    padding: 5px 8px;
+    border-radius: 999px;
+    font-weight: bold;
+}
+
+.community-chat {
+    height: 220px;
+    overflow-y: auto;
+    background: #f5f7fb;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #dfe7f3;
+}
+
+.community-message {
+    margin-bottom: 8px;
+    padding: 8px 10px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    line-height: 1.4;
+}
+
+.community-message.user {
+    background: #d8ebff;
+    margin-left: 20px;
+}
+
+.community-message.bot {
+    background: #eef2f7;
+    margin-right: 20px;
+}
+
+.community-message strong {
+    display: block;
+    margin-bottom: 3px;
+    font-size: 0.72rem;
+    color: #4b5563;
+}
+
+.community-name-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.community-name-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cfe0f7;
+}
+
+.community-name-row button:disabled,
+.community-input-row button:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+.community-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.community-input-row input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cfe0f7;
+}
+
+.community-input-row button {
+    padding: 10px 12px;
+    border: none;
+    border-radius: 8px;
+    background: #166eb6;
+    color: white;
+    cursor: pointer;
+}
+
+.community-hint {
+    margin: 8px 2px 0;
+    color: #64748b;
+    font-size: 0.68rem;
+    line-height: 1.4;
+}
+
+.top-actions {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    z-index: 9999;
+}
+
+.blog-buttons,
+.utility-buttons {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.blog-buttons button,
+.utility-buttons button {
+    margin-left: 0;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    background: #1976d2;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.blog-buttons button:hover,
+.utility-buttons button:hover {
+    background: #125ea8;
+}
+
+#installAppButton[hidden] {
+    display: none;
+}
+
+.search-row,
+.toolbar-row,
+.upload-section,
+.action-row,
+.bottom-actions,
+.status-bar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 15px 0;
+}
+
+.filter-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: white;
+    font-weight: bold;
+}
+
+#categoryFilter {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: none;
+    min-width: 120px;
+}
+
+.status-bar {
+    justify-content: space-between;
+    max-width: 500px;
+    margin: 15px auto;
+    color: white;
+    font-weight: bold;
+}
+
+#searchInput,
+#excelFile {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #cfcfcf;
+    min-width: 260px;
+}
+
+#searchBtn,
+#uploadBtn,
+button {
+    padding: 10px 20px;
+    margin: 5px;
+    border: none;
+    background: #166eb6;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#searchBtn:hover,
+#uploadBtn:hover,
+button:hover {
+    background: #005ca8;
+}
+
+#uploadBtn {
+    background: #28a745;
+}
+
+#uploadBtn:hover {
+    background: #218838;
+}
+
+.question-box {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    min-height: 160px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    margin-top: 20px;
+}
+
+body.dark-mode .question-box,
+body.dark-mode #answer,
+body.dark-mode #blogEditor,
+body.dark-mode #favoritePanel,
+body.dark-mode .filter-box,
+body.dark-mode .status-bar,
+body.dark-mode .community-sidebar {
+    background: rgba(15, 23, 42, 0.9);
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark-mode .community-chat {
+    background: #0f172a;
+    border-color: #334155;
+}
+
+body.dark-mode .community-message.bot {
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark-mode .community-message.user {
+    background: #1d4ed8;
+    color: white;
+}
+
+body.dark-mode .community-header h3 {
+    color: #e2e8f0;
+}
+
+body.dark-mode .community-close {
+    color: #e2e8f0;
+}
+
+body.dark-mode .community-close:hover {
+    background: #334155;
+}
+
+body.dark-mode .community-hint,
+body.dark-mode .community-status {
+    color: #cbd5e1;
+}
+
+body.dark-mode .community-name-row input,
+body.dark-mode .community-input-row input {
+    background: #1e293b;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+#question {
+    margin-top: 0;
+    font-size: 1.5rem;
+    color: #1d1d1d;
+}
+
+#answer {
+    background: #ffffff;
+    padding: 25px;
+    margin-top: 20px;
+    border-radius: 12px;
+    text-align: left;
+    font-family: Segoe UI, Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    border: 1px solid #ececec;
+}
+
+#answer p {
+    margin: 0 0 10px 0;
+}
+
+.answer-label {
+    color: #0f5dbd;
+    font-weight: bold;
+}
+
+.answer-number {
+    color: #0d3b66;
+    font-weight: bold;
+}
+
+.answer-text {
+    color: #222;
+}
+
+#counter {
+    font-weight: bold;
+    color: white;
+    margin: 15px 0;
+    font-size: 1.1rem;
+}
+
+#blogEditor {
+    background: rgb(204, 160, 160);
+    padding: 20px;
+    margin: 20px auto;
+    border-radius: 12px;
+    width: 95%;
+    max-width: 1100px;
+}
+
+#blogText {
+    width: 100%;
+    height: 500px;
+    padding: 15px;
+    font-size: 16px;
+    border-radius: 10px;
+    resize: vertical;
+    box-sizing: border-box;
+}
+
+.favorite-panel {
+    max-width: 900px;
+    margin: 25px auto 0;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: left;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
+}
+
+.favorite-panel.hidden {
+    display: none;
+}
+
+.favorite-item {
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.favorite-item:last-child {
+    border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+    body {
+        padding: 28px 18px 32px;
+    }
+
+    .container {
+        width: 100%;
+    }
+
+    .community-sidebar {
+        position: relative;
+        top: auto;
+        left: auto;
+        box-sizing: border-box;
+        width: min(100%, 520px);
+        margin: 0 auto 18px;
+    }
+
+    .community-sidebar[hidden] {
+        display: none;
+    }
+
+    .community-toggle {
+        position: static;
+        display: block;
+        margin: 0 auto 14px;
+    }
+
+    .top-actions {
+        position: static;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin: 0 0 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 20px 14px 28px;
+    }
+
+    h1 {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+        overflow-wrap: anywhere;
+    }
+
+    .blog-buttons,
+    .utility-buttons {
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .blog-buttons button,
+    .utility-buttons button {
+        min-height: 44px;
+        margin: 0;
+        padding: 10px 12px;
+    }
+
+    .search-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 8px;
+    }
+
+    #searchInput {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    #searchBtn {
+        min-height: 44px;
+        margin: 0;
+        padding: 10px 14px;
+    }
+
+    .toolbar-row {
+        justify-content: space-between;
+        gap: 8px;
+    }
+
+    .filter-box {
+        min-height: 44px;
+    }
+
+    #categoryFilter {
+        min-height: 44px;
+    }
+
+    #randomTestBtn {
+        min-height: 44px;
+        margin: 0;
+        padding: 10px 12px;
+    }
+
+    .upload-section {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    #excelFile {
+        width: min(100%, 360px);
+        min-width: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    #uploadBtn {
+        min-height: 44px;
+        margin: 0;
+    }
+
+    .status-bar {
+        justify-content: center;
+        gap: 0 18px;
+        text-align: center;
+    }
+
+    .status-bar p {
+        margin: 6px 0;
+    }
+
+    .question-box {
+        min-height: 0;
+        padding: 22px 16px;
+    }
+
+    #question {
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+        overflow-wrap: anywhere;
+    }
+
+    #answer {
+        box-sizing: border-box;
+        max-height: 50vh;
+        padding: 16px;
+        font-size: 16px;
+        overflow-wrap: anywhere;
+    }
+
+    .action-row {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .action-row button,
+    .bottom-actions button {
+        min-width: 0;
+        min-height: 44px;
+        margin: 0;
+        padding: 10px 8px;
+    }
+
+    #reviewBtn {
+        grid-column: 1 / -1;
+    }
+
+    .bottom-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    #blogEditor {
+        box-sizing: border-box;
+        width: 100%;
+    }
+
+    #blogText {
+        min-height: 45vh;
+    }
+
+    .favorite-panel {
+        box-sizing: border-box;
+        padding: 16px;
+    }
+
+    .community-modules {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .community-module-btn {
+        min-height: 44px;
+        margin: 0;
+    }
+
+    .community-name-row button,
+    .community-input-row button {
+        min-height: 44px;
+        margin: 0;
+    }
+
+    .community-name-row input,
+    .community-input-row input {
+        min-width: 0;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 420px) {
+    body {
+        padding: 16px 10px 24px;
+    }
+
+    .blog-buttons button,
+    .utility-buttons button {
+        padding: 9px 10px;
+        font-size: 0.9rem;
+    }
+
+    .toolbar-row {
+        justify-content: center;
+    }
+
+    .community-sidebar {
+        padding: 12px;
+    }
+
+    .community-name-row,
+    .community-input-row {
+        gap: 6px;
+    }
+
+    .community-name-row input,
+    .community-input-row input {
+        padding: 9px 8px;
+    }
+
+    .question-box {
+        padding: 18px 12px;
+    }
+}
+
+</style>
+<meta name="description" content="Standalone SAP interview practice and local notes app">
 </head>
 <body>
- 
-<div class="container">
-<div class="blog-buttons">
-<button onclick="location.href='fi-blog.html'">
-📘 FI Blog
-</button>
- 
-<button onclick="location.href='co-blog.html'">
-📗 CO Blog
-</button>
-</div>
-<div id="blogEditor" style="display:none;">
- 
-<h2 id="blogHeading"></h2>
- 
-<textarea id="blogText"
-placeholder="Write your notes here...">
-</textarea>
- 
-<br><br>
- 
-<button onclick="saveBlog()">
-💾 Save Notes
-</button>
- 
-</div>    
-<h1>KRUSHNA CHANDRA SWAIN </h1>
-<h1>Interview Practice </h1>
-<input
-type="text"
-id="searchInput"
-placeholder="Search Question..."
-><div class="upload-section">
-<input type="file" id="excelFile" accept=".xlsx,.xls">
-<button id="uploadBtn">📁 Upload Excel</button>
-</div>
- 
-<p id="counter"></p>
- <p id="counter"></p>
+  <button type="button" class="community-toggle" id="communityToggle" aria-expanded="false" aria-controls="communitySidebar">
+    🌐 SAP Communities
+  </button>
 
-  
-<div class="question-box">
-<div class="question-box">
-<h2 id="question"></h2>
-</div>
+  <aside class="community-sidebar" id="communitySidebar" aria-label="SAP Communities" hidden>
+    <div class="community-header">
+      <div class="community-title-row">
+        <h3>🌐 SAP Communities</h3>
+        <button type="button" class="community-close" id="communityClose" aria-label="Close SAP Communities">✕</button>
+      </div>
+      <div class="community-status connected" id="communityStatus" aria-live="polite">Local chat - this browser only</div>
+    </div>
 
- <div class="answer-box">
-<p id="answer" style="display:none;"></p>
-</div>
- 
-<button onclick="toggleAnswer()">Show Answer</button>
-<button onclick="previousQuestion()">Previous</button>
-<button onclick="randomQuestion()">Random</button>
-<button onclick="nextQuestion()">Next</button>
-</div>
- 
-<button onclick="copyQuestion()">Copy</button>
-<button onclick="markFavorite()">⭐ 
-Favorite</button>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<script src="questions.js"></script>
-<script src="script.js"></script>
- 
+    <div class="community-modules" id="communityModules">
+      <button type="button" class="community-module-btn active" data-module="FI">FI</button>
+      <button type="button" class="community-module-btn" data-module="CO">CO</button>
+      <button type="button" class="community-module-btn" data-module="MM">MM</button>
+      <button type="button" class="community-module-btn" data-module="SD">SD</button>
+      <button type="button" class="community-module-btn" data-module="HCM">HCM</button>
+      <button type="button" class="community-module-btn" data-module="Basis">Basis</button>
+    </div>
+
+    <div class="community-members" id="communityMembers"></div>
+
+    <div class="community-chat" id="communityMessages"></div>
+
+    <div class="community-name-row">
+      <input type="text" id="communityName" maxlength="24" placeholder="Your display name">
+      <button type="button" id="communityJoinBtn">Join</button>
+    </div>
+
+    <div class="community-input-row">
+      <input type="text" id="communityInput" maxlength="500" placeholder="Join to send messages..." disabled>
+      <button type="button" id="communitySendBtn" disabled>Send</button>
+    </div>
+    <p class="community-hint">Online messages are shared with other visitors; offline chat stays in this browser.</p>
+  </aside>
+
+  <div class="container">
+    <div class="top-actions">
+      <div class="blog-buttons">
+        <button type="button" onclick="showFI()">FI Blog</button>
+        <button type="button" onclick="showCO()">CO Blog</button>
+      </div>
+
+      <div class="utility-buttons">
+        <button type="button" id="installAppButton" hidden>Install App</button>
+        <button type="button" id="shareAppButton">📤 Share App</button>
+        <button type="button" id="themeToggle">🌙 Dark Mode</button>
+        <button type="button" id="favoriteToggle">⭐ Favorites</button>
+      </div>
+    </div>
+
+    <section id="blogEditor" style="display:none;" aria-label="Blog notes editor">
+      <h2 id="blogHeading"></h2>
+      <textarea id="blogText" placeholder="Write your notes here..."></textarea>
+      <div class="notes-actions"><button type="button" onclick="saveBlog()">Save Notes</button><button type="button" onclick="closeNotes()">Close</button></div>
+    </section>
+
+    <h1>Mock interview</h1>
+    <h1>Interview Practice</h1>
+
+    <div class="search-row">
+      <input type="text" id="searchInput" placeholder="Search Question...">
+      <button type="button" id="searchBtn">Search</button>
+    </div>
+
+    <div class="toolbar-row">
+      <div class="filter-box">
+        <label for="categoryFilter">Category:</label>
+        <select id="categoryFilter">
+          <option value="all">All</option>
+          <option value="FI">FI</option>
+          <option value="CO">CO</option>
+          <option value="General">General</option>
+        </select>
+      </div>
+
+      <button type="button" id="randomTestBtn">🧠 Random Test</button>
+    </div>
+
+    <div class="upload-section">
+      <input type="file" id="excelFile" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+      <button type="button" id="uploadBtn">📁 Upload Excel (.xlsx)</button>
+    </div>
+
+    <div class="status-bar">
+      <p id="counter"></p>
+      <p id="progressText">Progress: 0 / 0</p>
+    </div>
+
+    <div class="question-box">
+      <h2 id="question"></h2>
+
+      <div class="answer-box">
+        <p id="answer" style="display:none;"></p>
+      </div>
+
+      <div class="action-row">
+        <button type="button" data-action="answer">Show Answer</button>
+        <button type="button" data-action="previous">Previous</button>
+        <button type="button" data-action="random">Random</button>
+        <button type="button" data-action="next">Next</button>
+        <button type="button" id="reviewBtn">✅ Mark Reviewed</button>
+      </div>
+    </div>
+
+    <div class="bottom-actions">
+      <button type="button" onclick="copyQuestion()">Copy</button>
+      <button type="button" onclick="markFavorite()">⭐ Favorite</button>
+    </div>
+
+    <div id="favoritePanel" class="favorite-panel hidden"></div>
+  </div>
+
+  <script>
+window.questions = [
+  {
+    category: "FI",
+    question: "What is SAP FI?",
+    answer: "SAP FI (Financial Accounting) is used to manage accounting and financial reporting in an organization. It covers general ledger, accounts receivable, accounts payable, asset accounting, and financial statements."
+  },
+  {
+    category: "CO",
+    question: "What is the difference between SAP FI and SAP CO?",
+    answer: "SAP FI is mainly for external accounting and financial reporting, while SAP CO is for internal management accounting and cost controlling. FI focuses on legal and statutory reporting, while CO focuses on cost analysis and profitability."
+  },
+  {
+    category: "FI",
+    question: "What is the General Ledger in SAP FI?",
+    answer: "The General Ledger stores all accounting entries and balances for the company. It is the main accounting component where all financial transactions are posted and reconciled."
+  },
+  {
+    category: "General",
+    question: "What is a company code in SAP?",
+    answer: "A company code is the smallest organizational unit in SAP FI for which a complete set of accounts can be maintained. It represents a legal entity and is used for financial reporting."
+  },
+  {
+    category: "FI",
+    question: "What is the purpose of the document number in SAP FI?",
+    answer: "The document number uniquely identifies each accounting document. It helps track transactions, posting references, and audit trail for all FI postings."
+  },
+  {
+    category: "CO",
+    question: "What is a cost center in SAP CO?",
+    answer: "A cost center is an organizational unit in SAP CO used to track costs incurred by a department, process, or activity. It helps in internal cost monitoring and reporting."
+  }
+];
+
+  </script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+let current = 0;
+let questions = [];
+let allQuestions = [];
+let answerVisible = false;
+let activeCommunity = "FI";
+let communityJoined = false;
+let communityMessages = [];
+let favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+let reviewedQuestions = new Set(JSON.parse(localStorage.getItem("reviewedQuestions") || "[]"));
+const communityBus = "BroadcastChannel" in window ? new BroadcastChannel("sap-local-community") : null;
+const communitySocket = typeof window.io === "function" ? window.io() : null;
+
+function inferCategory(question, answer) {
+  const text = `${question} ${answer}`.toLowerCase();
+  if (/financial accounting|general ledger|accounts payable|accounts receivable|\bfi\b/.test(text)) return "FI";
+  if (/cost center|controlling|profitability|\bco\b/.test(text)) return "CO";
+  return "General";
+}
+function normalizeQuestion(item, index) {
+  return { id: item.id || index + 1, question: String(item.question || ""), answer: String(item.answer || ""), category: item.category || inferCategory(item.question || "", item.answer || "") };
+}
+function updateProgress() {
+  const reviewed = questions.filter((item) => reviewedQuestions.has(item.question)).length;
+  document.getElementById("progressText").textContent = `Progress: ${reviewed} / ${questions.length}`;
+}
+function showQuestion(index) {
+  const answer = document.getElementById("answer");
+  if (!questions.length) {
+    document.getElementById("question").textContent = "No questions in this category";
+    document.getElementById("counter").textContent = "0 of 0";
+    answer.style.display = "none";
+    updateProgress();
+    return;
+  }
+  current = (index + questions.length) % questions.length;
+  document.getElementById("question").textContent = questions[current].question || "Untitled question";
+  document.getElementById("counter").textContent = `Question ${current + 1} of ${questions.length}`;
+  answer.style.display = "none";
+  answer.replaceChildren();
+  answerVisible = false;
+  document.querySelector("[data-action='answer']").textContent = "Show Answer";
+  document.getElementById("reviewBtn").textContent = reviewedQuestions.has(questions[current].question) ? "Reviewed" : "Mark Reviewed";
+  updateProgress();
+}
+function toggleAnswer() {
+  if (!questions.length) return;
+  answerVisible = !answerVisible;
+  const answer = document.getElementById("answer");
+  answer.style.display = answerVisible ? "block" : "none";
+  answer.replaceChildren();
+  if (answerVisible) {
+    const lines = (questions[current].answer || "No answer available yet.").split(/\n+/).map((line) => line.trim()).filter(Boolean);
+    lines.forEach((line) => {
+      const p = document.createElement("p");
+      p.className = /^(Scenario|Example|Configuration|Steps|Note)\s*:/i.test(line) ? "answer-label" : /^\d+\./.test(line) ? "answer-number" : "answer-text";
+      p.textContent = line;
+      answer.appendChild(p);
+    });
+  }
+  document.querySelector("[data-action='answer']").textContent = answerVisible ? "Hide Answer" : "Show Answer";
+}
+function applyCategoryFilter() {
+  const category = document.getElementById("categoryFilter").value;
+  questions = category === "all" ? [...allQuestions] : allQuestions.filter((q) => q.category === category);
+  showQuestion(0);
+}
+function searchQuestion() {
+  const text = document.getElementById("searchInput").value.trim().toLowerCase();
+  if (!text) { alert("Please enter a question"); return; }
+  const index = questions.findIndex((q) => q.question.toLowerCase().includes(text));
+  if (index < 0) { alert("Question not found"); return; }
+  showQuestion(index);
+}
+function toggleDarkMode() {
+  document.body.classList.toggle("dark-mode");
+  const dark = document.body.classList.contains("dark-mode");
+  document.getElementById("themeToggle").textContent = dark ? "☀️ Light Mode" : "🌙 Dark Mode";
+  localStorage.setItem("themeMode", dark ? "dark" : "light");
+}
+function renderFavorites() {
+  const panel = document.getElementById("favoritePanel");
+  panel.replaceChildren();
+  const heading = document.createElement("h3"); heading.textContent = "⭐ Favorite Questions"; panel.appendChild(heading);
+  if (!favorites.length) { const empty = document.createElement("p"); empty.textContent = "No favorites saved yet."; panel.appendChild(empty); return; }
+  favorites.forEach((item) => { const row = document.createElement("div"); row.className = "favorite-item"; row.textContent = item.question; panel.appendChild(row); });
+}
+function markFavorite() {
+  if (!questions.length) return;
+  if (favorites.some((item) => item.question === questions[current].question)) { alert("This question is already in Favorites ⭐"); return; }
+  favorites.push(questions[current]); localStorage.setItem("favorites", JSON.stringify(favorites)); renderFavorites();
+}
+function toggleFavoritesPanel() { const panel = document.getElementById("favoritePanel"); panel.classList.toggle("hidden"); renderFavorites(); }
+function copyQuestion() {
+  if (!questions.length) return;
+  const text = `${questions[current].question}\n\n${questions[current].answer || "No answer available yet."}`;
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(() => alert("Question copied ✅")).catch(() => alert("Copy failed."));
+  else { const box = document.createElement("textarea"); box.value = text; document.body.appendChild(box); box.select(); document.execCommand("copy"); box.remove(); alert("Question copied ✅"); }
+}
+function markReviewed() {
+  if (!questions.length) return;
+  reviewedQuestions.add(questions[current].question); localStorage.setItem("reviewedQuestions", JSON.stringify([...reviewedQuestions]));
+  document.getElementById("reviewBtn").textContent = "Reviewed"; updateProgress();
+}
+function startRandomTest() { if (questions.length) { showQuestion(Math.floor(Math.random() * questions.length)); toggleAnswer(); } }
+function setCommunityPanelOpen(open) {
+  document.getElementById("communitySidebar").hidden = !open;
+  document.getElementById("communityToggle").hidden = open;
+  document.getElementById("communityToggle").setAttribute("aria-expanded", String(open));
+}
+function setCommunityStatus(text) { document.getElementById("communityStatus").textContent = text; }
+function loadCommunityMessages() {
+  try { const saved = JSON.parse(localStorage.getItem(`sapCommunityChat_${activeCommunity}`) || "[]"); communityMessages = Array.isArray(saved) ? saved : []; }
+  catch (error) { console.error("Could not read saved messages", error); communityMessages = []; }
+  renderCommunityMessages();
+}
+function saveCommunityMessages() {
+  try { localStorage.setItem(`sapCommunityChat_${activeCommunity}`, JSON.stringify(communityMessages)); }
+  catch (error) { console.error("Could not save community chat history", error); }
+}
+function renderCommunityMessages() {
+  const box = document.getElementById("communityMessages"); box.replaceChildren();
+  communityMessages.forEach((message) => {
+    const row = document.createElement("div"); row.className = `community-message${message.username === localStorage.getItem("communityUsername") ? " user" : " bot"}`;
+    const author = document.createElement("strong"); const time = new Date(message.sentAt);
+    author.textContent = `${message.username} - ${Number.isNaN(time.getTime()) ? "" : time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}`;
+    const body = document.createElement("span"); body.textContent = message.text; row.append(author, body); box.appendChild(row);
+  });
+  box.scrollTop = box.scrollHeight;
+}
+function renderCommunityMembers(members) {
+  const container = document.getElementById("communityMembers");
+  container.replaceChildren(...members.map((username) => {
+    const member = document.createElement("span");
+    member.className = "community-member";
+    member.textContent = username;
+    return member;
+  }));
+}
+function joinCommunityRoom() {
+  const input = document.getElementById("communityName"); const username = input.value.trim().replace(/\s+/g, " ");
+  if (username.length < 2 || username.length > 24) { setCommunityStatus("Name must be 2-24 characters"); input.focus(); return; }
+  localStorage.setItem("communityUsername", username);
+  communityJoined = true;
+  if (communitySocket) {
+    if (!communitySocket.connected) { setCommunityStatus("Connecting to SAP communities..."); return; }
+    setCommunityStatus(`Joining ${activeCommunity}...`);
+    communitySocket.emit("community:join", { module: activeCommunity, username }, (response) => {
+      if (!response?.ok) { communityJoined = false; setCommunityStatus(response?.error || "Could not join the community."); return; }
+      communityMessages = Array.isArray(response.messages) ? response.messages : [];
+      renderCommunityMessages();
+      saveCommunityMessages();
+      renderCommunityMembers(response.members || []);
+      document.getElementById("communityInput").disabled = false;
+      document.getElementById("communityInput").placeholder = `Message ${activeCommunity}...`;
+      document.getElementById("communitySendBtn").disabled = false;
+      setCommunityStatus(`Live chat - ${activeCommunity} - ${response.count} online`);
+    });
+    return;
+  }
+  document.getElementById("communityInput").disabled = false; document.getElementById("communityInput").placeholder = `Message ${activeCommunity}...`; document.getElementById("communitySendBtn").disabled = false;
+  renderCommunityMembers([username]);
+  setCommunityStatus(`Local chat - ${activeCommunity}`); loadCommunityMessages();
+}
+function sendCommunityMessage() {
+  const input = document.getElementById("communityInput"); const text = input.value.trim();
+  if (!text || !communityJoined || text.length > 500) return;
+  if (communitySocket) {
+    if (!communitySocket.connected) { setCommunityStatus("Community connection lost. Please wait and try again."); return; }
+    communitySocket.emit("community:message", { text }, (response) => {
+      if (!response?.ok) { setCommunityStatus(response?.error || "Could not send the message."); return; }
+      input.value = "";
+    });
+    return;
+  }
+  const message = { username: localStorage.getItem("communityUsername") || "User", text, sentAt: new Date().toISOString() };
+  const key = `sapCommunityChat_${activeCommunity}`; communityMessages.push(message); communityMessages = communityMessages.slice(-100);
+  try { localStorage.setItem(key, JSON.stringify(communityMessages)); }
+  catch (error) { communityMessages.pop(); setCommunityStatus("Could not save chat in browser storage"); console.error("Could not save chat message", error); return; }
+  if (communityBus) communityBus.postMessage({ module: activeCommunity, message });
+  input.value = ""; renderCommunityMessages();
+}
+window.addEventListener("storage", (event) => { if (event.key === `sapCommunityChat_${activeCommunity}`) loadCommunityMessages(); });
+if (communityBus) communityBus.addEventListener("message", (event) => {
+  const data = event.data; if (!data || data.module !== activeCommunity || !data.message) return;
+  if (communityMessages.some((item) => item.sentAt === data.message.sentAt)) return;
+  communityMessages.push(data.message); communityMessages = communityMessages.slice(-100); renderCommunityMessages();
+});
+if (communitySocket) {
+  setCommunityStatus("Connecting to SAP communities...");
+  communitySocket.on("connect", () => {
+    const username = localStorage.getItem("communityUsername");
+    if (communityJoined && username) {
+      document.getElementById("communityName").value = username;
+      joinCommunityRoom();
+    } else {
+      setCommunityStatus("Connected - join a module to chat");
+    }
+  });
+  communitySocket.on("disconnect", () => {
+    setCommunityStatus("Connection lost. Reconnecting to live chat...");
+    document.getElementById("communityInput").disabled = true;
+    document.getElementById("communitySendBtn").disabled = true;
+  });
+  communitySocket.on("community:presence", (presence) => {
+    if (presence.module !== activeCommunity) return;
+    renderCommunityMembers(presence.members || []);
+    if (communityJoined) setCommunityStatus(`Live chat - ${activeCommunity} - ${presence.count} online`);
+  });
+  communitySocket.on("community:message", (message) => {
+    if (communityMessages.some((item) => item.sentAt === message.sentAt && item.username === message.username)) return;
+    communityMessages.push(message);
+    communityMessages = communityMessages.slice(-100);
+    renderCommunityMessages();
+    saveCommunityMessages();
+  });
+}
+function escapeHTML(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+function sanitizeNotesHtml(html) {
+  const parsed = new DOMParser().parseFromString(html, "text/html");
+  const allowedTags = new Set(["B", "STRONG", "I", "EM", "U", "BR", "P", "DIV", "FONT"]);
+  const blockedTags = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "SVG", "MATH"]);
+  const cleanNode = (node) => {
+    [...node.childNodes].forEach((child) => {
+      if (child.nodeType !== Node.ELEMENT_NODE) return;
+      if (blockedTags.has(child.tagName)) {
+        child.remove();
+        return;
+      }
+      cleanNode(child);
+      if (!allowedTags.has(child.tagName)) {
+        child.replaceWith(...child.childNodes);
+        return;
+      }
+      [...child.attributes].forEach((attribute) => {
+        if (child.tagName !== "FONT" || attribute.name !== "size" || !/^[1-7]$/.test(attribute.value)) {
+          child.removeAttribute(attribute.name);
+        }
+      });
+    });
+  };
+  cleanNode(parsed.body);
+  return parsed.body.innerHTML;
+}
+function showNotes(module) {
+  const isFI = module === "FI";
+  const noteKey = isFI ? "fiBlogNotes" : "coBlogNotes";
+  const legacyKey = isFI ? "fiNotes" : "coNotes";
+  const categoriesKey = `sapBlogCategories_${module}`;
+  const categoryNames = [
+    "General Ledger",
+    "Accounts Payable",
+    "Accounts Receivable",
+    "Asset Accounting",
+    "Bank Accounting",
+    "GST",
+    "New GL"
+  ];
+  const savedNotes = localStorage.getItem(noteKey) ?? localStorage.getItem(legacyKey) ?? "";
+  const richNotesPrefix = "SAP_BLOG_RICH_V1\n";
+  const legacyNotes = savedNotes.startsWith(richNotesPrefix)
+    ? sanitizeNotesHtml(savedNotes.slice(richNotesPrefix.length))
+    : escapeHTML(savedNotes).replace(/\r?\n/g, "<br>");
+  const legacyDocument = new DOMParser().parseFromString(legacyNotes, "text/html");
+  legacyDocument.body.querySelectorAll("br").forEach((breakElement) => breakElement.replaceWith("\n"));
+  const legacyText = legacyDocument.body.textContent || "";
+  const legacyCategoryNames = legacyText.split(/\r?\n/).map((line) => line.replace(/^\s*\d+\.\s*/, "").trim()).filter(Boolean);
+  const isCategoryList = legacyCategoryNames.length === categoryNames.length
+    && categoryNames.every((name, index) => legacyCategoryNames[index].toLowerCase() === name.toLowerCase());
+  let categories;
+  let categoryStorageError = false;
+  const storedCategories = localStorage.getItem(categoriesKey);
+  if (storedCategories) {
+    try {
+      const parsedCategories = JSON.parse(storedCategories);
+      if (!Array.isArray(parsedCategories) || !parsedCategories.length || parsedCategories.some((category) =>
+        !category || typeof category.id !== "string" || typeof category.name !== "string" || typeof category.content !== "string"
+      )) throw new Error("Invalid saved category data");
+      categories = parsedCategories.map((category) => ({
+        id: category.id,
+        name: category.name.trim().slice(0, 60) || "Untitled",
+        content: sanitizeNotesHtml(category.content)
+      }));
+    } catch (error) {
+      console.error("Could not load blog categories", error);
+      alert("Saved blog categories could not be read. They will not be overwritten until you save a category change.");
+      categoryStorageError = true;
+      categories = categoryNames.map((name, index) => ({
+        id: `default-${index}`,
+        name,
+        content: index === 0 && !isCategoryList ? legacyNotes : ""
+      }));
+    }
+  } else {
+    categories = categoryNames.map((name, index) => ({
+      id: `default-${index}`,
+      name,
+      content: index === 0 && !isCategoryList ? legacyNotes : ""
+    }));
+  }
+  let activeCategoryId = categories[0].id;
+  const popupFeatures = `popup,width=${screen.availWidth},height=${screen.availHeight},left=0,top=0,resizable=yes,scrollbars=yes`;
+  const blogWindow = window.open("", "_blank", popupFeatures);
+  if (!blogWindow) {
+    alert("Blog window was blocked. Please allow pop-ups for this app and try again.");
+    return;
+  }
+
+  const title = `SAP ${module} Blog`;
+  blogWindow.document.open();
+  blogWindow.document.write(`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>${title}</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; }
+    body { margin: 0; padding: 0; min-height: 100vh; font-family: Arial, sans-serif; background: #fff; }
+    main { display: flex; flex-direction: column; width: 100%; min-height: 100vh; margin: 0; padding: 20px 24px; background: #fff; }
+    h1 { flex: 0 0 auto; margin: 0 0 14px; color: #174f91; }
+    .blog-layout { display: grid; flex: 1; min-height: 0; grid-template-columns: 270px minmax(0, 1fr); gap: 18px; align-items: stretch; }
+    .category-sidebar { padding: 14px; border: 1px solid #d4dce8; border-radius: 10px; background: #f8fafc; }
+    .category-sidebar h2 { margin: 0 0 12px; color: #174f91; font-size: 18px; }
+    #categoryList { display: grid; gap: 6px; max-height: 45vh; overflow-y: auto; }
+    .category-item { width: 100%; padding: 9px 10px; border: 1px solid transparent; border-radius: 7px; background: transparent; color: #1e293b; text-align: left; cursor: pointer; }
+    .category-item:hover { background: #eaf2fb; }
+    .category-item[aria-current="true"] { border-color: #166eb6; background: #dbeafe; color: #174f91; font-weight: bold; }
+    .add-category { display: grid; gap: 7px; margin-top: 12px; }
+    .add-category input { width: 100%; min-width: 0; padding: 9px; border: 1px solid #cbd5e1; border-radius: 7px; font: 14px Arial, sans-serif; }
+    .add-category button, #deleteCategory { width: 100%; padding: 9px; border: 0; border-radius: 7px; background: #166eb6; color: #fff; font-weight: bold; cursor: pointer; }
+    #deleteCategory { margin-top: 8px; background: #b42318; }
+    .add-category button:hover { background: #005ca8; }
+    #deleteCategory:hover { background: #8f1d14; }
+    #deleteCategory:disabled { background: #94a3b8; cursor: not-allowed; }
+    .notes-panel { display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+    .notes-panel h2 { margin: 0 0 12px; color: #174f91; }
+    .formatting-toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+    .formatting-toolbar button, .formatting-toolbar select { min-height: 38px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 7px; background: #fff; color: #1e293b; font: 15px Arial, sans-serif; cursor: pointer; }
+    .formatting-toolbar button { min-width: 42px; }
+    .formatting-toolbar button[aria-pressed="true"] { background: #dbeafe; border-color: #166eb6; }
+    #blogNotes { flex: 1; width: 100%; min-height: 0; overflow: auto; padding: 16px; border: 1px solid #cbd5e1; border-radius: 10px; font: 20px/1.6 Arial, sans-serif; white-space: pre-wrap; overflow-wrap: anywhere; }
+    #blogNotes:empty::before { color: #64748b; content: attr(data-placeholder); }
+    .actions { display: flex; flex: 0 0 auto; gap: 10px; margin-top: 14px; }
+    .actions button { padding: 11px 18px; border: 0; border-radius: 8px; background: #166eb6; color: #fff; font-weight: bold; cursor: pointer; }
+    .actions button:hover { background: #005ca8; }
+    #saveStatus { min-height: 1.4em; color: #166534; }
+    @media (max-width: 700px) { main { padding: 14px; } .blog-layout { grid-template-columns: 1fr; grid-template-rows: auto minmax(55vh, 1fr); gap: 12px; } #categoryList { grid-template-columns: repeat(2, minmax(0, 1fr)); max-height: 20vh; } #blogNotes { min-height: 0; } }
+  </style>
+</head>
+<body data-module="${module}">
+  <main>
+    <h1>${title}</h1>
+    <div class="blog-layout">
+      <aside class="category-sidebar" aria-label="Blog categories">
+        <h2>Categories</h2>
+        <nav id="categoryList" aria-label="Select a category"></nav>
+        <div class="add-category">
+          <input id="newCategoryName" type="text" maxlength="60" placeholder="New category name">
+          <button type="button" id="addCategory">+ Add Category</button>
+        </div>
+        <button type="button" id="deleteCategory">Delete Selected</button>
+      </aside>
+      <section class="notes-panel" aria-label="Category notes">
+        <h2 id="activeCategoryTitle"></h2>
+        <div class="formatting-toolbar" role="toolbar" aria-label="Text formatting">
+          <button type="button" id="boldText" aria-label="Bold" aria-pressed="false"><strong>B</strong></button>
+          <label for="textSize">Text size</label>
+          <select id="textSize" aria-label="Text size">
+            <option value="3" selected>Normal</option>
+            <option value="4">Large</option>
+            <option value="5">Very large</option>
+            <option value="6">Huge</option>
+            <option value="7">Extra huge</option>
+          </select>
+        </div>
+        <div id="blogNotes" contenteditable="true" role="textbox" aria-label="${module} blog notes" aria-multiline="true" data-placeholder="Write notes for this category..."></div>
+      </section>
+    </div>
+    <div class="actions">
+      <button type="button" id="saveNotes">Save Notes</button>
+      <button type="button" id="closeWindow">Close Window</button>
+    </div>
+    <p id="saveStatus" role="status" aria-live="polite"></p>
+  </main>
+<${"/"}body>
+<${"/"}html>`);
+  blogWindow.document.close();
+  blogWindow.moveTo(0, 0);
+  blogWindow.resizeTo(screen.availWidth, screen.availHeight);
+  const editor = blogWindow.document.getElementById("blogNotes");
+  const categoryList = blogWindow.document.getElementById("categoryList");
+  const categoryTitle = blogWindow.document.getElementById("activeCategoryTitle");
+  const boldButton = blogWindow.document.getElementById("boldText");
+  const deleteCategoryButton = blogWindow.document.getElementById("deleteCategory");
+  let savedRange = null;
+  const getActiveCategory = () => categories.find((category) => category.id === activeCategoryId);
+  const persistCategories = () => {
+    if (categoryStorageError) {
+      blogWindow.document.getElementById("saveStatus").textContent = "Categories could not be saved because the existing category data is invalid.";
+      return false;
+    }
+    try {
+      localStorage.setItem(categoriesKey, JSON.stringify(categories));
+      return true;
+    } catch (error) {
+      blogWindow.document.getElementById("saveStatus").textContent = "Could not save categories. Please check browser storage.";
+      console.error("Could not save blog categories", error);
+      return false;
+    }
+  };
+  const renderCategories = () => {
+    categoryList.replaceChildren();
+    categories.forEach((category) => {
+      const button = blogWindow.document.createElement("button");
+      button.type = "button";
+      button.className = "category-item";
+      button.textContent = category.name;
+      button.setAttribute("aria-current", String(category.id === activeCategoryId));
+      button.addEventListener("click", () => {
+        activeCategoryId = category.id;
+        renderCategories();
+        categoryTitle.textContent = category.name;
+        editor.innerHTML = category.content;
+        savedRange = null;
+      });
+      categoryList.append(button);
+    });
+    deleteCategoryButton.disabled = categories.length === 1;
+    const activeCategory = getActiveCategory();
+    categoryTitle.textContent = activeCategory.name;
+    editor.innerHTML = activeCategory.content;
+  };
+  const addCategory = () => {
+    const input = blogWindow.document.getElementById("newCategoryName");
+    const name = input.value.trim().replace(/\s+/g, " ");
+    if (!name) {
+      input.focus();
+      return;
+    }
+    if (categories.some((category) => category.name.toLowerCase() === name.toLowerCase())) {
+      blogWindow.document.getElementById("saveStatus").textContent = "That category already exists.";
+      input.focus();
+      return;
+    }
+    const category = { id: `custom-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`, name, content: "" };
+    categories.push(category);
+    activeCategoryId = category.id;
+    if (persistCategories()) {
+      input.value = "";
+      blogWindow.document.getElementById("saveStatus").textContent = "Category added.";
+      renderCategories();
+      editor.focus();
+    } else {
+      categories.pop();
+      activeCategoryId = categories[0].id;
+      renderCategories();
+    }
+  };
+  const addCategoryButton = blogWindow.document.getElementById("addCategory");
+  addCategoryButton.addEventListener("click", addCategory);
+  blogWindow.document.getElementById("newCategoryName").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") addCategory();
+  });
+  deleteCategoryButton.addEventListener("click", () => {
+    if (categories.length === 1) return;
+    const category = getActiveCategory();
+    if (!blogWindow.confirm(`Delete the "${category.name}" category and all its notes?`)) return;
+    const index = categories.findIndex((item) => item.id === activeCategoryId);
+    const [removedCategory] = categories.splice(index, 1);
+    activeCategoryId = categories[Math.max(0, index - 1)].id;
+    if (persistCategories()) {
+      blogWindow.document.getElementById("saveStatus").textContent = "Category deleted.";
+      renderCategories();
+    } else {
+      categories.splice(index, 0, removedCategory);
+      activeCategoryId = removedCategory.id;
+      renderCategories();
+    }
+  });
+  renderCategories();
+  const rememberSelection = () => {
+    const selection = blogWindow.getSelection();
+    if (selection && selection.rangeCount && editor.contains(selection.anchorNode)) {
+      savedRange = selection.getRangeAt(0).cloneRange();
+    }
+  };
+  const restoreSelection = () => {
+    editor.focus();
+    if (!savedRange) return;
+    const selection = blogWindow.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(savedRange);
+  };
+  editor.addEventListener("keyup", rememberSelection);
+  editor.addEventListener("mouseup", rememberSelection);
+  editor.addEventListener("input", () => {
+    rememberSelection();
+    const activeCategory = getActiveCategory();
+    activeCategory.content = sanitizeNotesHtml(editor.innerHTML);
+    persistCategories();
+  });
+  blogWindow.document.addEventListener("selectionchange", rememberSelection);
+  boldButton.addEventListener("mousedown", (event) => event.preventDefault());
+  boldButton.addEventListener("click", () => {
+    restoreSelection();
+    blogWindow.document.execCommand("bold");
+    boldButton.setAttribute("aria-pressed", String(blogWindow.document.queryCommandState("bold")));
+    rememberSelection();
+  });
+  const sizeSelector = blogWindow.document.getElementById("textSize");
+  sizeSelector.addEventListener("mousedown", rememberSelection);
+  sizeSelector.addEventListener("change", () => {
+    restoreSelection();
+    blogWindow.document.execCommand("fontSize", false, sizeSelector.value);
+    rememberSelection();
+  });
+  blogWindow.document.getElementById("saveNotes").addEventListener("click", () => {
+    const note = `${richNotesPrefix}${sanitizeNotesHtml(editor.innerHTML)}`;
+    getActiveCategory().content = sanitizeNotesHtml(editor.innerHTML);
+    try {
+      if (!persistCategories()) return;
+      localStorage.setItem(noteKey, note);
+      localStorage.setItem(legacyKey, note);
+      blogWindow.document.getElementById("saveStatus").textContent = "Notes saved successfully.";
+    } catch (error) {
+      blogWindow.document.getElementById("saveStatus").textContent = "Could not save notes. Please try again.";
+      console.error("Could not save blog notes", error);
+    }
+  });
+  blogWindow.document.getElementById("closeWindow").addEventListener("click", () => blogWindow.close());
+}
+function showFI() { showNotes("FI"); }
+function showCO() { showNotes("CO"); }
+function closeNotes() { document.getElementById("blogEditor").style.display = "none"; }
+function saveBlog() {
+  const isFI = document.getElementById("blogHeading").textContent.includes("FI"); const value = document.getElementById("blogText").value;
+  localStorage.setItem(isFI ? "fiBlogNotes" : "coBlogNotes", value); localStorage.setItem(isFI ? "fiNotes" : "coNotes", value); alert("Notes saved.");
+}
+function normalizeArchivePath(path) {
+  const parts = [];
+  path.split("/").forEach((part) => {
+    if (!part || part === ".") return;
+    if (part === "..") parts.pop();
+    else parts.push(part);
+  });
+  return parts.join("/");
+}
+
+async function readXlsxArchive(fileBuffer) {
+  const bytes = new Uint8Array(fileBuffer);
+  const view = new DataView(fileBuffer);
+  const decoder = new TextDecoder("utf-8");
+  const minimumOffset = Math.max(0, bytes.length - 65557);
+  let endRecordOffset = -1;
+
+  for (let offset = bytes.length - 22; offset >= minimumOffset; offset -= 1) {
+    if (view.getUint32(offset, true) === 0x06054b50) {
+      endRecordOffset = offset;
+      break;
+    }
+  }
+  if (endRecordOffset < 0) throw new Error("This is not a valid .xlsx workbook.");
+
+  const entryCount = view.getUint16(endRecordOffset + 10, true);
+  let directoryOffset = view.getUint32(endRecordOffset + 16, true);
+  const entries = new Map();
+
+  for (let entryIndex = 0; entryIndex < entryCount; entryIndex += 1) {
+    if (directoryOffset + 46 > bytes.length || view.getUint32(directoryOffset, true) !== 0x02014b50) {
+      throw new Error("The Excel file has a damaged ZIP directory.");
+    }
+
+    const flags = view.getUint16(directoryOffset + 8, true);
+    const method = view.getUint16(directoryOffset + 10, true);
+    const compressedSize = view.getUint32(directoryOffset + 20, true);
+    const nameLength = view.getUint16(directoryOffset + 28, true);
+    const extraLength = view.getUint16(directoryOffset + 30, true);
+    const commentLength = view.getUint16(directoryOffset + 32, true);
+    const localHeaderOffset = view.getUint32(directoryOffset + 42, true);
+    const nameStart = directoryOffset + 46;
+    const fileName = decoder.decode(bytes.subarray(nameStart, nameStart + nameLength));
+
+    if (flags & 1) throw new Error("Password-protected Excel files are not supported.");
+    entries.set(fileName, { method, compressedSize, localHeaderOffset });
+    directoryOffset = nameStart + nameLength + extraLength + commentLength;
+  }
+
+  async function readEntry(fileName) {
+    const entry = entries.get(fileName);
+    if (!entry) return null;
+    const offset = entry.localHeaderOffset;
+    if (offset + 30 > bytes.length || view.getUint32(offset, true) !== 0x04034b50) {
+      throw new Error(`The Excel file contains a damaged entry: ${fileName}`);
+    }
+    const nameLength = view.getUint16(offset + 26, true);
+    const extraLength = view.getUint16(offset + 28, true);
+    const dataStart = offset + 30 + nameLength + extraLength;
+    const compressed = bytes.slice(dataStart, dataStart + entry.compressedSize);
+
+    if (entry.method === 0) return decoder.decode(compressed);
+    if (entry.method !== 8) throw new Error(`Unsupported compression in Excel file: ${fileName}`);
+    if (typeof DecompressionStream === "undefined") {
+      throw new Error("This browser cannot unpack .xlsx files. Open the app in a recent Chrome or Edge browser.");
+    }
+
+    try {
+      const stream = new Blob([compressed]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
+      return await new Response(stream).text();
+    } catch {
+      throw new Error(`Could not decompress Excel worksheet data: ${fileName}`);
+    }
+  }
+
+  function parseXml(xml, description) {
+    if (!xml) throw new Error(`Excel workbook is missing ${description}.`);
+    const document = new DOMParser().parseFromString(xml, "application/xml");
+    if (document.querySelector("parsererror")) throw new Error(`Excel workbook contains invalid ${description}.`);
+    return document;
+  }
+
+  const workbook = parseXml(await readEntry("xl/workbook.xml"), "workbook metadata");
+  const firstSheet = workbook.getElementsByTagNameNS("*", "sheet")[0];
+  if (!firstSheet) throw new Error("The Excel workbook has no worksheets.");
+
+  const relationshipId = firstSheet.getAttributeNS(
+    "http://schemas.openxmlformats.org/officeDocument/2006/relationships",
+    "id"
+  );
+  const relationships = parseXml(await readEntry("xl/_rels/workbook.xml.rels"), "worksheet relationships");
+  const relationship = [...relationships.getElementsByTagNameNS("*", "Relationship")]
+    .find((item) => item.getAttribute("Id") === relationshipId);
+  if (!relationship) throw new Error("Could not locate the first Excel worksheet.");
+
+  const target = relationship.getAttribute("Target") || "";
+  const sheetPath = normalizeArchivePath(target.startsWith("/")
+    ? target.slice(1)
+    : `xl/${target}`);
+  const worksheet = parseXml(await readEntry(sheetPath), "first worksheet");
+  const sharedStringsXml = await readEntry("xl/sharedStrings.xml");
+  const sharedStrings = sharedStringsXml
+    ? [...parseXml(sharedStringsXml, "shared strings").getElementsByTagNameNS("*", "si")]
+      .map((item) => [...item.getElementsByTagNameNS("*", "t")].map((text) => text.textContent || "").join(""))
+    : [];
+
+  return [...worksheet.getElementsByTagNameNS("*", "row")].map((row) => {
+    const cells = [];
+    [...row.getElementsByTagNameNS("*", "c")].forEach((cell) => {
+      const reference = cell.getAttribute("r") || "";
+      const letters = reference.match(/[A-Z]+/i);
+      if (!letters) return;
+      let column = 0;
+      for (const letter of letters[0].toUpperCase()) {
+        column = column * 26 + letter.charCodeAt(0) - 64;
+      }
+      column -= 1;
+
+      const type = cell.getAttribute("t");
+      let value = "";
+      if (type === "inlineStr") {
+        value = [...cell.getElementsByTagNameNS("*", "t")].map((text) => text.textContent || "").join("");
+      } else {
+        const valueElement = cell.getElementsByTagNameNS("*", "v")[0];
+        value = valueElement ? valueElement.textContent || "" : "";
+        if (type === "s" && value !== "") value = sharedStrings[Number(value)] ?? "";
+        if (type === "b") value = value === "1" ? "TRUE" : "FALSE";
+      }
+      cells[column] = value;
+    });
+    return cells.map((value) => value ?? "");
+  });
+}
+
+document.getElementById("uploadBtn").addEventListener("click", async () => {
+  const file = document.getElementById("excelFile").files[0];
+  if (!file) {
+    alert("Please select an Excel .xlsx file first.");
+    return;
+  }
+  if (!file.name.toLowerCase().endsWith(".xlsx")) {
+    alert("Please use the modern Excel .xlsx format. Legacy .xls files are not supported in this standalone offline app.");
+    return;
+  }
+  if (file.size > 30 * 1024 * 1024) {
+    alert("Excel file is too large. Please select a file smaller than 30 MB.");
+    return;
+  }
+
+  const uploadButton = document.getElementById("uploadBtn");
+  uploadButton.disabled = true;
+  uploadButton.textContent = "Reading Excel...";
+  try {
+    const rows = await readXlsxArchive(await file.arrayBuffer());
+    const firstRow = rows[0] || [];
+    const dataRows = /question/i.test(String(firstRow[0] || "")) ? rows.slice(1) : rows;
+    const imported = dataRows
+      .filter((row) => row && row[0] !== undefined && String(row[0]).trim())
+      .map((row, index) => ({
+        id: index + 1,
+        question: String(row[0]).trim(),
+        answer: String(row[1] ?? "").trim(),
+        category: String(row[2] ?? "").trim() || inferCategory(String(row[0]), String(row[1] ?? ""))
+      }));
+
+    if (!imported.length) {
+      alert("No questions found. Use the first column for questions, second for answers, and optional third for category.");
+      return;
+    }
+
+    allQuestions = imported.map(normalizeQuestion);
+    localStorage.setItem("questions", JSON.stringify(allQuestions));
+    applyCategoryFilter();
+    alert(`${allQuestions.length} questions loaded successfully from ${file.name}.`);
+  } catch (error) {
+    console.error("Excel upload failed", error);
+    alert(error.message || "Could not read the selected Excel workbook.");
+  } finally {
+    uploadButton.disabled = false;
+    uploadButton.textContent = "📁 Upload Excel (.xlsx)";
+  }
+});
+
+window.addEventListener("load", () => {
+  const savedTheme = localStorage.getItem("themeMode"); if (savedTheme === "dark") { document.body.classList.add("dark-mode"); document.getElementById("themeToggle").textContent = "Light Mode"; }
+  let savedQuestions = null; try { savedQuestions = JSON.parse(localStorage.getItem("questions") || "null"); } catch (error) { console.error("Saved questions could not be read", error); }
+  allQuestions = Array.isArray(savedQuestions) && savedQuestions.length ? savedQuestions.map(normalizeQuestion) : (window.questions || []).map(normalizeQuestion);
+  if (!savedQuestions && allQuestions.length) localStorage.setItem("questions", JSON.stringify(allQuestions));
+  questions = [...allQuestions]; renderFavorites(); showQuestion(0);
+  const name = localStorage.getItem("communityUsername") || ""; document.getElementById("communityName").value = name;
+  loadCommunityMessages(); if (name) joinCommunityRoom();
+});
+document.getElementById("themeToggle").addEventListener("click", toggleDarkMode);
+document.getElementById("favoriteToggle").addEventListener("click", toggleFavoritesPanel);
+document.getElementById("shareAppButton").addEventListener("click", async () => {
+  const shareData = {
+    title: "SAP Interview Practice",
+    text: "Practice SAP interview questions with SAP Interview Practice."
+  };
+
+  if (typeof window.AndroidApp?.shareApplication === "function") {
+    window.AndroidApp.shareApplication();
+    return;
+  }
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ ...shareData, url: window.location.href });
+    } catch (error) {
+      if (error.name !== "AbortError") {
+        console.error("Could not share the app", error);
+        alert("Could not share the app. Please try again.");
+      }
+    }
+    return;
+  }
+
+  try {
+    await navigator.clipboard.writeText(`${shareData.text} ${window.location.href}`);
+    alert("App link copied. You can now share it with others.");
+  } catch (error) {
+    console.error("Could not copy the app link", error);
+    alert("Could not share the app. Please copy the app link from your browser.");
+  }
+});
+let pendingInstallPrompt = null;
+const installAppButton = document.getElementById("installAppButton");
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  pendingInstallPrompt = event;
+  installAppButton.hidden = false;
+});
+installAppButton.addEventListener("click", async () => {
+  if (!pendingInstallPrompt) return;
+  pendingInstallPrompt.prompt();
+  await pendingInstallPrompt.userChoice;
+  pendingInstallPrompt = null;
+  installAppButton.hidden = true;
+});
+window.addEventListener("appinstalled", () => {
+  pendingInstallPrompt = null;
+  installAppButton.hidden = true;
+});
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/service-worker.js").catch((error) => {
+    console.error("App offline support could not be enabled", error);
+  });
+}
+document.getElementById("categoryFilter").addEventListener("change", applyCategoryFilter);
+document.getElementById("randomTestBtn").addEventListener("click", startRandomTest);
+document.getElementById("reviewBtn").addEventListener("click", markReviewed);
+document.getElementById("communitySendBtn").addEventListener("click", sendCommunityMessage);
+document.getElementById("communityInput").addEventListener("keypress", (event) => { if (event.key === "Enter") sendCommunityMessage(); });
+document.getElementById("communityJoinBtn").addEventListener("click", joinCommunityRoom);
+document.getElementById("communityToggle").addEventListener("click", () => setCommunityPanelOpen(true));
+document.getElementById("communityClose").addEventListener("click", () => setCommunityPanelOpen(false));
+document.getElementById("communityName").addEventListener("keypress", (event) => { if (event.key === "Enter") joinCommunityRoom(); });
+document.getElementById("searchInput").addEventListener("keypress", (event) => { if (event.key === "Enter") searchQuestion(); });
+document.getElementById("searchBtn").addEventListener("click", searchQuestion);
+document.querySelectorAll(".community-module-btn").forEach((button) => button.addEventListener("click", function () {
+  activeCommunity = this.dataset.module;
+  document.querySelectorAll(".community-module-btn").forEach((btn) => btn.classList.toggle("active", btn === this));
+  if (communityJoined) joinCommunityRoom();
+  else { loadCommunityMessages(); document.getElementById("communityMembers").replaceChildren(); setCommunityStatus(`Join ${activeCommunity} to chat`); }
+}));
+document.querySelectorAll("[data-action]").forEach((button) => button.addEventListener("click", () => {
+  const action = button.dataset.action;
+  if (action === "answer") toggleAnswer();
+  if (action === "previous") showQuestion(current - 1);
+  if (action === "next") showQuestion(current + 1);
+  if (action === "random") { if (questions.length) showQuestion(Math.floor(Math.random() * questions.length)); }
+}));
+
+  </script>
 </body>
 </html>

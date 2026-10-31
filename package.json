@@ -1,0 +1,64 @@
+{
+  "name": "sap-interview-practice",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SAP interview practice app with live module communities",
+  "main": "desktop-main.js",
+  "scripts": {
+    "start": "node server.js",
+    "desktop": "electron .",
+    "dist:win": "powershell -NoProfile -ExecutionPolicy Bypass -File .\\build-windows.ps1"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "electron": "^45.0.0",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "com.krushnacool.sapinterviewpractice",
+    "productName": "SAP Interview Practice",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "desktop-main.js",
+      "server.js",
+      "index.html",
+      "manifest.webmanifest",
+      "service-worker.js",
+      "app-icon.svg",
+      "app-icon.ico",
+      "app-icon-192.png",
+      "app-icon-512.png"
+    ],
+    "win": {
+      "icon": "app-icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SAP Interview Practice",
+      "artifactName": "SAP-Interview-Practice-Setup-${version}.${ext}"
+    }
+  },
+  "allowScripts": {
+    "electron@45.0.0": true
+  }
+}

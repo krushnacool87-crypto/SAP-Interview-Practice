@@ -1,0 +1,46 @@
+plugins {
+    id "com.android.application"
+}
+
+def generatedAssets = layout.buildDirectory.dir("generated/webAssets")
+def generatedResources = layout.buildDirectory.dir("generated/appResources")
+
+tasks.register("copyWebApp", Copy) {
+    from(rootProject.file("../index.html"))
+    into(generatedAssets)
+    rename { "index.html" }
+}
+
+tasks.register("copyAppIcon", Copy) {
+    from(rootProject.file("../app-icon-192.png"))
+    into(generatedResources.map { it.dir("mipmap-mdpi") })
+    rename { "ic_launcher.png" }
+}
+
+android {
+    namespace "com.krushnacool.sapinterviewpractice"
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.krushnacool.sapinterviewpractice"
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName "1.0.0"
+    }
+
+    sourceSets {
+        main {
+            assets.srcDir(generatedAssets)
+            res.srcDir(generatedResources)
+        }
+    }
+}
+
+dependencies {
+    implementation "androidx.core:core:1.17.0"
+}
+
+tasks.named("preBuild").configure {
+    dependsOn("copyWebApp", "copyAppIcon")
+}
